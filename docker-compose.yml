@@ -1,0 +1,31 @@
+version: '3'
+services:
+  web:
+    build: .
+    image: myyarnproject
+    working_dir: /usr/src
+    ports:
+      - "3000:3000"
+    entrypoint:
+      - yarn
+      - serve
+    volumes: 
+      - ${PWD}:/usr/src
+  cypress_gui:
+    image: cypress/included:9.5.4
+    #build:
+    container_name: cypress_gui1
+    privileged: true
+    network_mode: host
+    working_dir: /e2e
+    environment:
+      - DISPLAY=unix${DISPLAY}
+    entrypoint:
+      - cypress
+      - open
+      - --project 
+      - .
+    volumes: 
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+      - ${PWD}:/e2e

@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "cypress": "^9.5.4"
+  },
+  "name": "src",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "serve": "^13.0.2"
+  }
+}
