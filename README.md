@@ -7,13 +7,25 @@ A (relatively) basic project using yarn and docker for testing rxjs with typescr
 Linux users should first open xhost to local docker user. Example:
 >xhost +"local:docker@"
 
-Startup with docker-compose:
+Build docker image when running for the first time:
+>docker-compose build
+
+Startup:
 >docker-compose up
 
 This will start two service containers: web (service "frontend") and cypress
 
 Open browser to:
 >http://192.168.2.99:3000/dist
+
+
+# webpack watch
+
+For development, run webpack watch. Log into service "frontend" container and run:
+     yarn run webpack build --watch
+
+
+[not integrating it into yarn start since this can become optional]
 
 
 # Creating the web app
