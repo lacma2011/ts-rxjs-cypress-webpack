@@ -4,7 +4,10 @@ A (relatively) basic project using yarn and docker for testing rxjs with typescr
 
 # Running Services
 
-To start (using docker/docker-compose):
+Linux users should first open xhost to local docker user. Example:
+>xhost +"local:docker@"
+
+Startup with docker-compose:
 >docker-compose up
 
 This will start two service containers: web (service "frontend") and cypress
