@@ -1,8 +1,10 @@
 version: '3'
 services:
-  web:
+  frontend:
     build: .
     image: myyarnproject
+    container_name: frontend1
+    restart: always
     working_dir: /usr/src
     ports:
       - "3000:3000"
@@ -11,14 +13,24 @@ services:
       - serve
     volumes: 
       - ${PWD}:/usr/src
+    networks:
+      mynetwork:
+        ipv4_address: 192.168.2.99
+    stdin_open: true
+    environment:
+      - HOST=192.168.2.99
+      
   cypress_gui:
     image: cypress/included:9.5.4
     #build:
     container_name: cypress_gui1
+    depends_on:
+      - frontend
     privileged: true
     network_mode: host
     working_dir: /e2e
     environment:
+      - CYPRESS_baseUrl=http://192.168.2.99:3000
       - DISPLAY=unix${DISPLAY}
     entrypoint:
       - cypress
@@ -29,3 +41,11 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
       - ${PWD}:/e2e
+
+networks:
+  mynetwork:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.2.100/29
+          gateway: 192.168.2.97
