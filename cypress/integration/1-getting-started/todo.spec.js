@@ -11,6 +11,30 @@
 // please read our getting started guide:
 // https://on.cypress.io/introduction-to-cypress
 
+describe.only('continents',()=>{
+
+  beforeEach(()=>{
+    cy
+      .visit('/dist');
+  });
+
+  it('types North America', ()=>{
+    cy
+      .get('#type-ahead')
+      .type('Nor')
+      .get('#output')
+      .contains('north america');
+  });
+
+  it('types both America', ()=>{
+    cy
+      .get('#type-ahead')
+      .type('th')
+      .get('#output')
+      .contains('north america')
+      .contains('south america');
+  });
+});
 
 describe('tutorial', ()=>{
 
@@ -35,7 +59,7 @@ describe('example to-do app', () => {
     cy.visit('https://example.cypress.io/todo')
   })
 
-  it.only('displays two todo items by default', () => {
+  it('displays two todo items by default', () => {
     // We use the `cy.get()` command to get all elements that match the selector.
     // Then, we use `should` to assert that there are two matched items,
     // which are the two default items.
