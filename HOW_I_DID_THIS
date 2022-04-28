@@ -1,0 +1,72 @@
+
+add server:
+    yarn add server
+
+now we can serve the project on web
+    yarn serve
+
+created dockerfile and docker-compose to start the server.
+
+to run services
+---------------
+Run container:
+    docker-compose up web
+    
+Now I can login while container is running:
+    docker exec -it $(docker ps -q) /bin/bash
+    (replace with container ID if needed)
+
+
+building app
+------------
+
+add typescript:
+    yarn add typescript --dev
+    yarn run tsc --init
+
+build folder and perm:
+    mkdir build
+    chmod 775 build
+    sudo chmod 775 tsconfig.json
+    sudo chown jj tsconfig.json
+
+modify tsconfig.json with watch options in article:
+    https://www.typescriptlang.org/docs/handbook/configuring-watch.html
+
+add exclude:
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+
+------------------------------------------
+run ts transpiler
+-----------------
+this does not really work at building modules though, so use webpack instead
+
+after yarn server starts up, watch source for transpiling by opening a new container:
+
+    docker exec -it $(docker ps -q) /bin/bash
+
+    (in container)
+        yarn run tsc --watch
+
+
+
+-------------------------------------------
+add webpack
+-----------
+container 'web' must be running
+    docker-compose up web
+
+open new container for shell into container 'web'
+    docker exec -it $(docker ps -q) /bin/bash
+
+    (in container)
+        yarn add webpack webpack-cli --dev
+    
+follow beginner tutorial to put index.html into new folder dist/
+    https://webpack.js.org/guides/getting-started/
+
+    dist/index.html will have link to the build like so:
+        <script src="/dist/main.js"></script>

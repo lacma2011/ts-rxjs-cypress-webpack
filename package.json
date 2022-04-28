@@ -1,12 +1,16 @@
 {
   "devDependencies": {
-    "cypress": "^9.5.4"
+    "cypress": "^9.5.4",
+    "typescript": "^4.6.3",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
   },
   "name": "src",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "rxjs": "latest",
     "serve": "^13.0.2"
   }
 }
