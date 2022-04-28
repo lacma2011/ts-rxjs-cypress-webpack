@@ -1,8 +1,12 @@
 
 console.clear();
 // RxJS v6+
-import { fromEvent, of } from 'rxjs';
+import { fromEvent, of, from as observableFrom } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs';
+
+// import * as Rx from 'rxjs'
+// var requestStream = observableFrom('https://api.github.com/users');
+
 
 const getContinents = keys => [
   'africa',
