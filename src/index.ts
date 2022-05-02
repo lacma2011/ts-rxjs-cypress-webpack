@@ -1,13 +1,21 @@
 
-console.clear();
+// console.clear();
 // RxJS v6+
+import * as jQuery from 'jquery';
+
 import { fromEvent, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs';
 
+import { from, scan } from 'rxjs';
 // import { from as observableFrom } from 'rxjs';
-// import * as Rx from 'rxjs'
-// var requestStream = observableFrom('https://api.github.com/users');
-// console.log('ok!');
+import * as Rx from 'rxjs'
+
+var box = document.getElementById('type-ahead')
+fromEvent(box, 'click')
+  .pipe(
+    scan( count => count + 1, 0),    
+  )
+  .subscribe( count => console.log('Clicked ${count} times.'));
 
 const getContinents = keys => [
   'africa',
@@ -32,3 +40,11 @@ fromEvent(document.getElementById('type-ahead'), 'keyup')
     switchMap(fakeContinentsRequest),
     tap(c => document.getElementById('output').innerText = c.join('\n'))
   ).subscribe();
+
+
+
+// for one test 'todo.spec.js' 'alias gets new rerender from DOM'
+jQuery('#output').on('click', function(e){
+  console.log('CLICKED');
+  jQuery(this).html('We are here!');
+});

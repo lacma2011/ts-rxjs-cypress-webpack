@@ -11,7 +11,7 @@
 // please read our getting started guide:
 // https://on.cypress.io/introduction-to-cypress
 
-describe.only('continents',()=>{
+describe('continents',()=>{
 
   beforeEach(()=>{
     cy
@@ -36,7 +36,33 @@ describe.only('continents',()=>{
   });
 });
 
-describe('tutorial', ()=>{
+
+describe('double click', ()=>{
+  beforeEach(()=>{
+    cy
+      .visit('/dist');
+  });
+
+  it('contains Antarctica', ()=>{
+    cy
+      .get('#type-ahead')
+      .type('Antarctica')
+      .should(( $ele )=>{
+        let text = $ele.val();
+        expect(text.toLowerCase()).to.eq('antarctica');
+      });
+
+    cy
+      .get('#type-ahead')
+      .then( $ele => {
+        //debugger
+
+        expect($ele.val().toUpperCase()).to.eq('ANTARCTICA');
+      });
+  });
+});
+
+describe.skip('tutorial good hints', ()=>{
 
   // its('ele1.ele2.ele3')
   // NOT its('ele1').its('ele2').its('ele3') 
@@ -44,12 +70,87 @@ describe('tutorial', ()=>{
   // cy.contains()
   // NOT cy.get().contains()  or cy.get().should('contain')
 
+  // use aliases
+  //  - retryability
+  //  - to add data to each it() context
+
+});
+
+describe('Core Concepts: Variables and Aliases', ()=>{
+
+  beforeEach(()=>{
+    cy.fixture('example.json').as('users');
+  });
+
+  it('aliases help for facades and fixtures', function () {
+
+    const user = this.users;
+    cy.log('user');
+    expect(user.email).to.eq('hello@cypress.io');
+
+    cy
+      .get('@users')
+      .then( $user=>{
+        expect($user.email).to.eq('hello@cypress.io');
+      });
+
+    cy
+      .wrap(this.users)
+      .then(user=>{
+        expect(user.email).to.eq('hello@cypress.io');
+      });
+
+  });
+
+
+  it('alias gets new rerender from DOM', ()=>{
+    cy
+      .visit('/dist');
+      
+    // binding new event with jquery doesnt work
+    // Cypress.$('#output').on('click', function(e) {
+    //   cy.log('clicked!');
+    //   Cypress.$('#output').html('Here we Are');
+    // });
+
+    cy.get('#output').invoke('html','We Arent Here Yet');
+
+    cy
+      .get('#output')
+      .invoke('text')
+      .then(textstr=>{
+        expect(textstr).to.eq('We Arent Here Yet');
+      });
+
+    cy.get('#output').as('output-text');
+
+    cy
+      .get('@output-text')
+      .invoke('text')
+      .then(textstr=>{
+        expect(textstr).to.eq('We Arent Here Yet');
+      });
+
+    cy
+      .get('#output')
+      .click();
+    
+    cy
+      .get('@output-text')
+      .invoke('text')
+      .then(textstr=>{
+        cy.log('found text: ' + textstr);
+        expect(textstr).to.eq('We are here!');
+      });
+
+  
+
+  });
 
 });
 
 
-
-describe('example to-do app', () => {
+describe.skip('example to-do app', () => {
   
   beforeEach(() => {
     // Cypress starts out with a blank slate for each test
@@ -198,4 +299,4 @@ describe('example to-do app', () => {
   })
 
   
-})
+});
