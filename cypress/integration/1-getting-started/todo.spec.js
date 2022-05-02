@@ -102,51 +102,106 @@ describe('Core Concepts: Variables and Aliases', ()=>{
 
   });
 
+  
+  describe('Core Concepts: Vars and Aliases - DOM', ()=>{
 
-  it('alias gets new rerender from DOM', ()=>{
-    cy
-      .visit('/dist');
+    //overrides the beforeEach() from before
+    beforeEach(()=>{
+      cy.visit('/dist');
+    });
+
+    it('alias a DOM element', ()=>{
+      cy.get("#output").as('output')
+
+      cy
+        .get('@output')
+        .then($ele =>{
+          expect($ele).is.empty;
+        });
+
+      cy
+        .get('#type-ahead')
+        .type('ant')
+        .then(()=>{
+          cy
+            .get('@output')
+            .invoke('text')
+            .should('equal', 'antarctica');
+        });
+    });
+
+
+    it('alias gets new rerender from DOM', ()=>{
+      cy
+        .visit('/dist');
+        
+      // binding new event with jquery doesnt work
+      // Cypress.$('#output').on('click', function(e) {
+      //   cy.log('clicked!');
+      //   Cypress.$('#output').html('Here we Are');
+      // });
+  
+      cy.get('#output').invoke('html','We Arent Here Yet');
+  
+      cy
+        .get('#output')
+        .invoke('text')
+        .then(textstr=>{
+          expect(textstr).to.eq('We Arent Here Yet');
+        });
+  
+      cy.get('#output').as('output-text');
+  
+      cy
+        .get('@output-text')
+        .invoke('text')
+        .then(textstr=>{
+          expect(textstr).to.eq('We Arent Here Yet');
+        });
+  
+      cy
+        .get('#output')
+        .click();
       
-    // binding new event with jquery doesnt work
-    // Cypress.$('#output').on('click', function(e) {
-    //   cy.log('clicked!');
-    //   Cypress.$('#output').html('Here we Are');
-    // });
-
-    cy.get('#output').invoke('html','We Arent Here Yet');
-
-    cy
-      .get('#output')
-      .invoke('text')
-      .then(textstr=>{
-        expect(textstr).to.eq('We Arent Here Yet');
-      });
-
-    cy.get('#output').as('output-text');
-
-    cy
-      .get('@output-text')
-      .invoke('text')
-      .then(textstr=>{
-        expect(textstr).to.eq('We Arent Here Yet');
-      });
-
-    cy
-      .get('#output')
-      .click();
+      cy
+        .get('@output-text')
+        .invoke('text')
+        .then(textstr=>{
+          cy.log('found text: ' + textstr);
+          expect(textstr).to.eq('We are here!');
+        });
+  
     
-    cy
-      .get('@output-text')
-      .invoke('text')
-      .then(textstr=>{
-        cy.log('found text: ' + textstr);
-        expect(textstr).to.eq('We are here!');
-      });
+    });
 
+    
   
 
   });
 
+  describe('Core Concepts: Vars and Aliases - Intercepts & Requests', ()=>{
+      // beforeEach(()=>{
+      //   cy.visit('/dist');
+      // });
+
+      xit('example alias intercept', ()=>{
+
+        //todo : new page with form?
+
+      });
+
+      it('example alias a request', ()=>{
+        cy.request('https://jsonplaceholder.cypress.io/comments').as('comments')
+
+        cy.get('@comments').should(response=>{
+          if(response.status === 200) {
+            expect(response).to.have.property('duration');
+          }
+        });
+  
+      });
+
+  });
 });
 
 
